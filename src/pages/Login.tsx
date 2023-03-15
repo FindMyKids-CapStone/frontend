@@ -1,23 +1,14 @@
 /* eslint-disable react/button-has-type */
 import React from 'react'
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  FormControl,
-  Grid,
-  InputAdornment,
-  styled,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Box, Card, CardContent, FormControl, Grid, InputAdornment, styled, TextField, Typography } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { Form, Formik, FormikValues } from 'formik'
 import * as yup from 'yup'
 import { yupTextValidate } from 'consts/common'
-import PersonIcon from '@mui/icons-material/Person'
 import LockIcon from '@mui/icons-material/Lock'
+import EmailIcon from '@mui/icons-material/Email'
 import { theme } from 'theme/theme.config'
+import { signInWithEmail } from 'firebaseConfig'
 
 export const Label = styled(Typography)({
   fontSize: '0.9rem',
@@ -25,6 +16,8 @@ export const Label = styled(Typography)({
 })
 
 const Login = () => {
+  const [loading, setLoading] = React.useState(false)
+  console.log('loading', loading)
   return (
     <Box
       sx={{
@@ -39,14 +32,18 @@ const Login = () => {
         <CardContent>
           <Formik
             initialValues={{
-              username: '',
+              email: '',
               password: '',
             }}
-            onSubmit={(values: FormikValues) => {
-              console.log(values)
+            onSubmit={async (values: FormikValues) => {
+              setLoading(true)
+              setTimeout(async () => {
+                await signInWithEmail(values.email, values.password)
+              }, 3000)
+              setLoading(false)
             }}
             validationSchema={yup.object().shape({
-              username: yup.string().required(yupTextValidate.required),
+              email: yup.string().email('Vui lòng điền đúng định dạng email').required(yupTextValidate.required),
               password: yup.string().required(yupTextValidate.required),
             })}
           >
@@ -56,7 +53,7 @@ const Login = () => {
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Label>
-                        Username
+                        Email
                         <span
                           style={{
                             color: 'red',
@@ -69,11 +66,11 @@ const Login = () => {
                       <TextField
                         variant="standard"
                         fullWidth
-                        name="username"
-                        id="username"
-                        value={formik.values.username}
+                        name="email"
+                        id="email"
+                        value={formik.values.email}
                         onChange={formik.handleChange}
-                        helperText={formik.errors.username && formik.touched.username ? formik.errors.username : ' '}
+                        helperText={formik.errors.email && formik.touched.email ? formik.errors.email : ' '}
                         FormHelperTextProps={{
                           style: {
                             margin: 0,
@@ -82,16 +79,16 @@ const Login = () => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PersonIcon
+                              <EmailIcon
                                 sx={{
-                                  color: formik.errors.username && formik.touched.username ? 'red' : 'gray',
+                                  color: formik.errors.email && formik.touched.email ? 'red' : 'gray',
                                 }}
                               />
                             </InputAdornment>
                           ),
                         }}
                         // eslint-disable-next-line no-unneeded-ternary
-                        error={formik.errors.username && formik.touched.username ? true : false}
+                        error={formik.errors.email && formik.touched.email ? true : false}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -137,16 +134,17 @@ const Login = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl fullWidth>
-                        <Button
+                        <LoadingButton
                           fullWidth
                           type="submit"
                           variant="contained"
                           sx={{
                             borderRadius: '10px',
                           }}
+                          loading={loading}
                         >
                           Login
-                        </Button>
+                        </LoadingButton>
                       </FormControl>
                     </Grid>
                   </Grid>
