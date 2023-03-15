@@ -3,20 +3,20 @@ import { devtools, persist } from 'zustand/middleware'
 
 let store = (set, get) => ({
   user: null,
-  token: null,
+  accessToken: null,
   getUser: () => get().user,
   setDataUser: (data) => {
     set((state) => ({
       ...state,
       user: data,
-      token: data.accessToken,
+      accessToken: data.accessToken,
     }))
   },
   logout: async () => {
     set((state) => ({
       ...state,
       user: null,
-      token: null,
+      accessToken: null,
     }))
   },
 })

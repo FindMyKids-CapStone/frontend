@@ -3,6 +3,8 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { toast } from 'react-toastify'
+
+import userStore from 'stores/user'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,18 +25,20 @@ export const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 
 export const signInWithEmail = async (email, password) => {
-  signInWithEmailAndPassword(auth, email, password)
+  let check = false
+  await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
+      check = true
       const user = userCredential.user
-      console.log(user)
-      // ...
+      userStore.setState({ user, accessToken: user?.accessToken })
     })
     .catch((error) => {
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
         toast.error('Email hoặc mật khẩu không đúng')
       }
     })
+  return check
 }
 
 export const logout = async () => {

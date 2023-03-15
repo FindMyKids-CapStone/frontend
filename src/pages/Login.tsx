@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Card, CardContent, FormControl, Grid, InputAdornment, styled, TextField, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Form, Formik, FormikValues } from 'formik'
@@ -9,6 +9,7 @@ import LockIcon from '@mui/icons-material/Lock'
 import EmailIcon from '@mui/icons-material/Email'
 import { theme } from 'theme/theme.config'
 import { signInWithEmail } from 'firebaseConfig'
+import { useNavigate } from 'react-router-dom'
 
 export const Label = styled(Typography)({
   fontSize: '0.9rem',
@@ -16,8 +17,8 @@ export const Label = styled(Typography)({
 })
 
 const Login = () => {
-  const [loading, setLoading] = React.useState(false)
-  console.log('loading', loading)
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   return (
     <Box
       sx={{
@@ -36,11 +37,13 @@ const Login = () => {
               password: '',
             }}
             onSubmit={async (values: FormikValues) => {
-              setLoading(true)
-              setTimeout(async () => {
-                await signInWithEmail(values.email, values.password)
-              }, 3000)
-              setLoading(false)
+              if (isLoading) return
+              setIsLoading(true)
+              const res = await signInWithEmail(values.email, values.password)
+              if (res) {
+                navigate('/')
+              }
+              setIsLoading(false)
             }}
             validationSchema={yup.object().shape({
               email: yup.string().email('Vui lòng điền đúng định dạng email').required(yupTextValidate.required),
@@ -141,7 +144,7 @@ const Login = () => {
                           sx={{
                             borderRadius: '10px',
                           }}
-                          loading={loading}
+                          loading={isLoading}
                         >
                           Login
                         </LoadingButton>

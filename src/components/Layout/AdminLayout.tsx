@@ -15,6 +15,15 @@ const AdminLayout = ({ children }: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const [nameLink, setNameLink] = useState([]) as any
+
+  React.useEffect(() => {
+    let temp = location?.pathname.split('/')
+    temp = temp.filter((item) => item !== '')
+    setNameLink(temp?.map((item) => ({ title: item })))
+  }, [location?.pathname])
+
+  console.log(nameLink)
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -33,10 +42,7 @@ const AdminLayout = ({ children }: LayoutProps) => {
       <Layout className="site-layout">
         <Header style={{ padding: 0, background: 'white' }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
+          <Breadcrumb style={{ margin: '16px 0' }} items={nameLink} />
           {children}
         </Content>
       </Layout>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import userStore from 'stores/user'
 import Login from 'pages/Login'
@@ -14,7 +14,7 @@ export default function WebRoute() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/*" element={<RegularRoute />} />
+        <Route path="/*" element={user ? <RegularRoute /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   )
