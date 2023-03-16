@@ -2,18 +2,9 @@ import React from 'react'
 import { Box, Button, TextField, Typography } from '@mui/material'
 
 import { theme } from 'theme/theme.config'
-import { getTest } from 'api/testApi'
 import { MyButton } from 'styles/Button'
 
 const Home = () => {
-  const hanldleGetTest = async () => {
-    const data = await getTest()
-    console.log(data)
-  }
-
-  React.useEffect(() => {
-    hanldleGetTest()
-  }, [])
   return (
     <Box
       sx={{

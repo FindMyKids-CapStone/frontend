@@ -1,11 +1,12 @@
 import React from 'react'
-import { Box, Button, Grid, TextField } from '@mui/material'
+import { Box, Button, Grid, TextField, Typography } from '@mui/material'
 import type { ColumnsType } from 'antd/es/table'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 
 import TableAdmin from 'components/Table/Table'
 import { getUser } from 'api/manageUser'
 import { UserType } from 'types/userType'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { theme } from 'theme/theme.config'
 
 interface SearchProps {
   search?: string
@@ -18,7 +19,18 @@ const columns: ColumnsType<UserType> = [
     title: 'Id',
     dataIndex: 'id',
     key: 'id',
-    render: (text) => <div>{text}</div>,
+    render: (_: UserType, data: UserType) => (
+      <Link to={`/user/parent/${data.id}`}>
+        <Typography
+          sx={{
+            color: theme.palette.primary.main,
+            cursor: 'pointer',
+          }}
+        >
+          {data.id}
+        </Typography>
+      </Link>
+    ),
   },
   {
     title: 'Họ và tên',
@@ -42,10 +54,10 @@ const columns: ColumnsType<UserType> = [
   },
 ]
 
-const KidPage = () => {
+const ParentPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [dataKids, setDataKids] = React.useState<any>()
+  const [dataParents, setDataParents] = React.useState<any>()
   const [search, setSearch] = React.useState<SearchProps>({
     search: '',
     sortBy: 'all',
@@ -66,9 +78,9 @@ const KidPage = () => {
     if (searchTemp.sort !== 'all') {
       url += `?sort=${searchTemp.sort}`
     }
-    const res = await getUser({ param: `?role=children&page=${pageFetch}&pageSize=10${url}` })
+    const res = await getUser({ param: `?role=parent&page=${pageFetch}&pageSize=10${url}` })
     if (res?.status === 200) {
-      setDataKids(
+      setDataParents(
         res?.data?.data?.users?.map((item: any) => ({
           ...item,
           key: item.id,
@@ -84,7 +96,7 @@ const KidPage = () => {
   }
 
   const onChangePage = async (page: number) => {
-    navigate(`/user/kid?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}&page=${page}`)
+    navigate(`/user/parent?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}&page=${page}`)
   }
 
   React.useEffect(() => {
@@ -144,7 +156,7 @@ const KidPage = () => {
           <Button
             variant="contained"
             onClick={() => {
-              navigate(`/user/kid?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}`)
+              navigate(`/user/parent?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}`)
             }}
           >
             Áp dụng
@@ -153,7 +165,7 @@ const KidPage = () => {
       </Grid>
       <TableAdmin
         columns={columns}
-        data={dataKids}
+        data={dataParents}
         totalReconds={totalUser}
         currentPage={currentPage}
         loading={loading}
@@ -163,4 +175,4 @@ const KidPage = () => {
   )
 }
 
-export default KidPage
+export default ParentPage

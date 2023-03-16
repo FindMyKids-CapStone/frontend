@@ -36,7 +36,7 @@
               }
             }
           ],
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx", ".ts"] }],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx", ".ts", ".css"] }],
         "import/extensions": [
             "error",
             "ignorePackages",
@@ -52,7 +52,7 @@
       "import/resolver": {
         "node": {
           "paths": ["src"],
-          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          "extensions": [".js", ".jsx", ".ts", ".tsx", ".css"]
         }
       }
     }

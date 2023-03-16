@@ -8,7 +8,6 @@ import RegularRoute from './regular'
 
 export default function WebRoute() {
   const { user } = userStore()
-  console.log(user)
 
   return (
     <BrowserRouter>

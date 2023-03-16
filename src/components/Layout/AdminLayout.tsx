@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Breadcrumb, Layout, Menu } from 'antd'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { theme } from 'theme/theme.config'
 import { dataSlider } from 'consts/menuSlider'
-import { useLocation, useNavigate } from 'react-router-dom'
+// import styles from './styles.css'
 
 const { Header, Content, Sider } = Layout
 
@@ -23,14 +24,13 @@ const AdminLayout = ({ children }: LayoutProps) => {
     setNameLink(temp?.map((item) => ({ title: item })))
   }, [location?.pathname])
 
-  console.log(nameLink)
-
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} theme="dark">
+      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} theme="light">
         <div style={{ height: 32, margin: 16, background: theme.palette.secondary.main }} />
         <Menu
-          theme="dark"
+          // className={styles.menuLayout}
+          theme="light"
           defaultSelectedKeys={[location?.pathname]}
           mode="inline"
           items={dataSlider}
