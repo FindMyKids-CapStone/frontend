@@ -4,4 +4,7 @@ export interface UserType {
   role: string
   phoneNumber: string
   avatar: string
+  fullName: string
+  address: string
+  birthday: string
 }

@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import Loading from 'components/Loading'
 import { validateEmail, validatePhone } from 'consts/common'
 
-const DetailParentPage = () => {
+const DetailKidPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [data, setData] = React.useState<UserType>({
@@ -278,4 +278,4 @@ const DetailParentPage = () => {
   )
 }
 
-export default DetailParentPage
+export default DetailKidPage

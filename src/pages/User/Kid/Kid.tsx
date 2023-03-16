@@ -1,11 +1,12 @@
 import React from 'react'
-import { Box, Button, Grid, TextField } from '@mui/material'
+import { Box, Button, Grid, TextField, Typography } from '@mui/material'
 import type { ColumnsType } from 'antd/es/table'
 
 import TableAdmin from 'components/Table/Table'
 import { getUser } from 'api/manageUser'
 import { UserType } from 'types/userType'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
+import { theme } from 'theme/theme.config'
 
 interface SearchProps {
   search?: string
@@ -18,7 +19,18 @@ const columns: ColumnsType<UserType> = [
     title: 'Id',
     dataIndex: 'id',
     key: 'id',
-    render: (text) => <div>{text}</div>,
+    render: (_: UserType, data: UserType) => (
+      <Link to={`/user/kid/${data.id}`}>
+        <Typography
+          sx={{
+            color: theme.palette.primary.main,
+            cursor: 'pointer',
+          }}
+        >
+          {data.id}
+        </Typography>
+      </Link>
+    ),
   },
   {
     title: 'Họ và tên',
@@ -58,13 +70,13 @@ const KidPage = () => {
   const hanldleData = async (searchTemp: SearchProps, pageFetch: number) => {
     let url = ''
     if (searchTemp.search) {
-      url += `?search=${searchTemp.search}`
+      url += `&search=${searchTemp.search}`
     }
     if (searchTemp.sortBy !== 'all') {
-      url += `?sortBy=${searchTemp.sortBy}`
+      url += `&sortBy=${searchTemp.sortBy}`
     }
     if (searchTemp.sort !== 'all') {
-      url += `?sort=${searchTemp.sort}`
+      url += `&sort=${searchTemp.sort}`
     }
     const res = await getUser({ param: `?role=children&page=${pageFetch}&pageSize=10${url}` })
     if (res?.status === 200) {
@@ -89,11 +101,11 @@ const KidPage = () => {
 
   React.useEffect(() => {
     setSearch({
-      search: searchParams.get('search') || '',
+      search: searchParams.get('search')?.replace('%20', ' ') || '',
       sortBy: searchParams.get('sortBy') ? (searchParams.get('sortBy') as 'createdAt' | 'fullName' | 'all') : 'all',
       sort: searchParams.get('sortBy') ? (searchParams.get('sort') as 'asc' | 'desc' | 'all') : 'all',
     })
-
+    setCurrentPage(searchParams.get('page') ? Number(searchParams.get('page')) || 1 : 1)
     hanldleData(
       {
         search: searchParams.get('search') || '',
@@ -144,7 +156,7 @@ const KidPage = () => {
           <Button
             variant="contained"
             onClick={() => {
-              navigate(`/user/kid?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}`)
+              navigate(`/user/kid?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}&page=1`)
             }}
           >
             Áp dụng

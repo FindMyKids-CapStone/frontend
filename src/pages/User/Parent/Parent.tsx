@@ -70,15 +70,15 @@ const ParentPage = () => {
   const hanldleData = async (searchTemp: SearchProps, pageFetch: number) => {
     let url = ''
     if (searchTemp.search) {
-      url += `?search=${searchTemp.search}`
+      url += `&search=${searchTemp.search}`
     }
     if (searchTemp.sortBy !== 'all') {
-      url += `?sortBy=${searchTemp.sortBy}`
+      url += `&sortBy=${searchTemp.sortBy}`
     }
     if (searchTemp.sort !== 'all') {
-      url += `?sort=${searchTemp.sort}`
+      url += `&sort=${searchTemp.sort}`
     }
-    const res = await getUser({ param: `?role=parent&page=${pageFetch}&pageSize=10${url}` })
+    const res = await getUser({ param: `?role=parent&page=${pageFetch}?pageSize=10${url}` })
     if (res?.status === 200) {
       setDataParents(
         res?.data?.data?.users?.map((item: any) => ({
@@ -105,6 +105,8 @@ const ParentPage = () => {
       sortBy: searchParams.get('sortBy') ? (searchParams.get('sortBy') as 'createdAt' | 'fullName' | 'all') : 'all',
       sort: searchParams.get('sortBy') ? (searchParams.get('sort') as 'asc' | 'desc' | 'all') : 'all',
     })
+
+    setCurrentPage(searchParams.get('page') ? Number(searchParams.get('page')) || 1 : 1)
 
     hanldleData(
       {
@@ -156,7 +158,7 @@ const ParentPage = () => {
           <Button
             variant="contained"
             onClick={() => {
-              navigate(`/user/parent?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}`)
+              navigate(`/user/parent?search=${search.search}&sortBy=${search.sortBy}&sort=${search.sort}&page=1`)
             }}
           >
             Áp dụng

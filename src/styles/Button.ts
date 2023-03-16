@@ -1,8 +1,13 @@
 import { Button, styled } from '@mui/material'
+import { teal } from '@mui/material/colors'
 
-export const MyButton = styled(Button)({
-  borderRadius: '60.5px',
-  fontSize: '18px',
+export const ButtonSuccess = styled(Button)({
+  borderRadius: '10px',
   padding: '8px 20px',
-  margin: '10px',
+  background: `${teal[700]} !important`,
+})
+
+export const ButtonAdmin = styled(Button)({
+  borderRadius: '10px',
+  padding: '8px 20px',
 })

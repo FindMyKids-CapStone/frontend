@@ -7,5 +7,9 @@ export const getUser = ({ param }) => {
 }
 
 export const getDetailUser = ({ id }) => {
-  return HttpUtility.get(`${baseApi}/admin/get-user/${id}`)
+  return HttpUtility.get(`${baseApi}/admin/${id}/detail`)
+}
+
+export const updateUser = ({ data }) => {
+  return HttpUtility.post(`${baseApi}/admin/update-profile`, data)
 }
